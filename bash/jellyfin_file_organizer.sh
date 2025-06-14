@@ -3,12 +3,12 @@
 # Variables based on seedbox folders
 # Here : all files are downloaded in /downloads and 2 folders : Movies and Shows have been created below the same folder
 SOURCE_DIR="/downloads"
-FILM_DIR="${SOURCE_DIR}/Movies"
-SERIE_DIR="${SOURCE_DIR}/Shows"
+FILM_DIR="Movies"
+SERIE_DIR="Shows"
 
 # Create the folders if they don't exist
-[ ! -d "$FILM_DIR" ] && mkdir -p "$FILM_DIR"
-[ ! -d "$SERIE_DIR" ] && mkdir -p "$SERIE_DIR"
+[ ! -d "$SOURCE_DIR/$FILM_DIR" ] && mkdir -p "$SOURCE_DIR/$FILM_DIR"
+[ ! -d "$SOURCE_DIR/$SERIE_DIR" ] && mkdir -p "$SOURCE_DIR/$SERIE_DIR"
 
 # Extensions to consider
 MEDIA_EXT="mp4|mkv|avi|mov"
@@ -61,14 +61,14 @@ find "$SOURCE_DIR" -type f -regextype posix-extended -regex ".*\.($MEDIA_EXT)$" 
   # - If not, it is a movie
 
   filename=$(basename "$file")
-  dirname=$(dirname "$file" | sed -e "s|^$SOURCE_DIR|../|g")
+  dirname=$(dirname "$file" | sed -e "s|^$SOURCE_DIR\/|../|g")
 
   # Series detection patterns:
   # - S01E12 : S followed by 1-2 digits (season) + E followed by 1-3 digits (episode)
   # - 1x12 : 1-2 digits (season) + x + 1-3 digits (episode)
   # - Season 1 : "Season" + optional space + 1-2 digits (season)
   # - Saison 1 : "Saison" + optional space + 1-2 digits (season)
-  if echo "$filename" | grep -Eiq 'S[0-9]{1,2}E[0-9]{1,3}|[0-9]{1,2}x[0-9]{1,3}|Season[ ]*[0-9]{1,2}|Saison[ ]*[0-9]{1,2}'; then
+  if echo "$filename" | grep -Eiq 'S[0-9]{1,2}E[0-9]{1,3}|[0-9]{1,2}x[0-9]{1,3}|Season[ ]*[0-9]{1,2}|Saison[ ]*[0-9]{1,2}|VOL[ ]*[0-9]{1,2}|Vol[ ]*[0-9]{1,2}|vol[ ]*[0-9]{1,2}|Volume[ ]*[0-9]{1,2}|volume[ ]*[0-9]{1,2}|- [0-9]{1,2} '; then
     # Serie section
     
     # Extract series name from path or filename
@@ -103,8 +103,6 @@ find "$SOURCE_DIR" -type f -regextype posix-extended -regex ".*\.($MEDIA_EXT)$" 
         ln -s "$file" "$target"
     fi
     
-    # Store in temporary file for later processing
-    echo "$normalized_name|$season|$episode|$file" >> "$TEMP_SERIES"
   else
     # Movie section
 
@@ -121,17 +119,14 @@ find "$SOURCE_DIR" -type f -regextype posix-extended -regex ".*\.($MEDIA_EXT)$" 
 
 done
 
-# Remove the temporary files
-rm -f "$TEMP_MOVIES" "$TEMP_SERIES"
-
 # Clean broken symlinks in both directories
-for dir in "$FILM_DIR" "$SERIE_DIR"; do
-    find "$dir" -type l | while read -r symlink; do
-        if [ ! -e "$(readlink "$symlink")" ]; then
-            rm "$symlink"
-        fi
-    done
-done
+#for dir in "$FILM_DIR" "$SERIE_DIR"; do
+#    find "$dir" -type l | while read -r symlink; do
+#        if [ ! -e "$(readlink "$symlink")" ]; then
+#            rm "$symlink"
+#        fi
+#    done
+#done
 
 # Remove empty directories under SERIE_DIR
 find "$SERIE_DIR" -type d -empty -not -path "$SERIE_DIR" | while read -r empty_dir; do
