@@ -61,7 +61,7 @@ find "$SOURCE_DIR" -type f -regextype posix-extended -regex ".*\.($MEDIA_EXT)$" 
   # - If not, it is a movie
 
   filename=$(basename "$file")
-  dirname=$(dirname "$file" | sed -e "s|^$SOURCE_DIR\/|../|g")
+  dirname=$(dirname "$file" | sed -e "s|^$SOURCE_DIR|..|g")
 
   # Series detection patterns:
   # - S01E12 : S followed by 1-2 digits (season) + E followed by 1-3 digits (episode)
