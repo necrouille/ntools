@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Variables based on seedbox folders
-# Here : all files are downloaded in /downloads and 2 folders : Movies and Shows have been created below the same folder
+# Here : all files are downloaded in /downloads and 2 folders : Movies and Series have been created below the same folder
 SOURCE_DIR="/downloads"
 FILM_DIR="Movies"
-SERIE_DIR="Shows"
+SERIE_DIR="Series"
 
 # Create the folders if they don't exist
 [ ! -d "$SOURCE_DIR/$FILM_DIR" ] && mkdir -p "$SOURCE_DIR/$FILM_DIR"
@@ -16,7 +16,7 @@ IGNORE_EXT="meta|nfo"
 SRT_EXT="srt"
 
 # Directories to ignore
-IGNORE_DIR="Apps|rclone-mnt|watch|OpenVPN|Shows|Movies"
+IGNORE_DIR="Apps|rclone-mnt|watch|OpenVPN|Series|Movies"
 
 # Function to normalize series name
 normalize_series_name() {
