@@ -7,6 +7,16 @@ series_dir="Series"
 # Extensions to consider
 media_ext="mp4|mkv|avi|mov" 
 
+bin_update_tmp=$(mktemp)
+wget https://raw.githubusercontent.com/necrouille/ntools/refs/heads/main/bash/directory_scanner.sh -o $bin_update_tmp
+if [ $(md5sum "$working_dir/$(basename $0)" | awk '{print $1}') -ne $(md5sum $bin_update_tmp | awk '{print $1}') ]; then
+    echo "Updating binary"
+    cp $bin_update_tmp "$working_dir/$(basename $0)"
+else
+    echo "debug"
+fi
+exit 0
+
 # Create the folders if they don't exist
 [ ! -d "$working_dir/$movies_dir" ] && mkdir -p "$working_dir/$movies_dir"
 [ ! -d "$working_dir/$series_dir" ] && mkdir -p "$working_dir/$series_dir"
