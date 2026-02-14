@@ -273,4 +273,3 @@ btn_wifi.pack(side=tk.LEFT, padx=5, pady=10)
 
 # Lancer l'interface
 root.mainloop()
-
